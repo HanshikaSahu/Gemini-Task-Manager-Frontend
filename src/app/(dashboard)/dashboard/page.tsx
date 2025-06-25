@@ -10,6 +10,13 @@ import {
   FaClipboard,
 } from 'react-icons/fa';
 
+type Task = {
+  id: string;
+  title: string;
+  completed: boolean;
+  dueDate?: string;
+};
+
 export default function DashboardPage() {
   const { user } = useUser();
   const [total, setTotal] = useState(0);
@@ -18,7 +25,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     if (!user) return;
-    fetchTasks(user.id).then((tasks) => {
+    fetchTasks(user.id).then((tasks: Task[]) => {
       const totalTasks = tasks.length;
       const completedTasks = tasks.filter((t) => t.completed).length;
       const pendingTasks = totalTasks - completedTasks;

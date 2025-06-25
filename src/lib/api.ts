@@ -17,7 +17,6 @@ export async function fetchTasks(userId: string) {
   return Array.isArray(data) ? data : data.tasks || [];
 }
 
-
 // ✅ Create a new task
 export async function createTask(task: {
   title: string;
@@ -47,9 +46,9 @@ export async function createTask(task: {
   return data;
 }
 
-// ✅ Update task (toggle completion, edit title, update dueDate)
+// ✅ Fix type here: id: string
 export async function updateTask(
-  id: number,
+  id: string,
   updates: Partial<{
     title: string;
     completed: boolean;
@@ -74,8 +73,8 @@ export async function updateTask(
   return data;
 }
 
-// ✅ Delete a task
-export async function deleteTask(id: number) {
+// ✅ Fix type here: id: string
+export async function deleteTask(id: string) {
   console.log(`🗑️ Deleting task #${id}`);
 
   const res = await fetch(`${BASE_URL}/${id}`, {

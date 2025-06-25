@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useEffect, useState } from "react";
 import { useUser, SignInButton } from "@clerk/nextjs";
@@ -9,9 +9,18 @@ import { Input } from "@/components/ui/input";
 import { Loader2, PlusCircle } from "lucide-react";
 import toast from "react-hot-toast";
 
+
+// ✅ Define Task type
+type Task = {
+  id: string;
+  title: string;
+  completed: boolean;
+  dueDate?: string;
+};
+
 export default function TasksPage() {
   const { user, isSignedIn } = useUser();
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
   const [newTaskText, setNewTaskText] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [loading, setLoading] = useState(false);
@@ -22,8 +31,7 @@ export default function TasksPage() {
     const loadTasks = async () => {
       try {
         setLoading(true);
-        console.log("🔄 Fetching tasks for user:", user.id);
-        const fetched = await fetchTasks(user.id);
+        const fetched: Task[] = await fetchTasks(user.id);
         setTasks(fetched);
       } catch (err) {
         console.error("❌ Failed to fetch tasks", err);
@@ -39,7 +47,6 @@ export default function TasksPage() {
   const addTask = async () => {
     if (!newTaskText.trim()) return;
     if (!user?.id) {
-      console.warn("⚠️ User ID is undefined when creating task");
       toast.error("❌ User not available");
       return;
     }
@@ -51,8 +58,7 @@ export default function TasksPage() {
         userId: user.id,
         dueDate: dueDate || null,
       };
-      console.log("🛠️ Creating task with payload:", payload);
-      const created = await createTask(payload);
+      const created: Task = await createTask(payload);
       setTasks((prev) => [...prev, created]);
       setNewTaskText("");
       setDueDate("");
@@ -65,23 +71,23 @@ export default function TasksPage() {
     }
   };
 
-  const toggleTask = async (id, completed) => {
+  const toggleTask = async (id: string, completed: boolean) => {
     try {
       setLoading(true);
-      await updateTask(id, { completed });
+      await updateTask(id, { completed }); // ✅ Ensure `id` is string
       setTasks((prev) =>
         prev.map((t) => (t.id === id ? { ...t, completed } : t))
       );
       toast.success(`Task marked as ${completed ? "completed" : "incomplete"}`);
     } catch (err) {
-      console.error("Update task error:", err);
+      console.error("❌ Update task error:", err);
       toast.error("❌ Failed to update task");
     } finally {
       setLoading(false);
     }
   };
 
-  const editTask = async (id, title) => {
+  const editTask = async (id: string, title: string) => {
     try {
       setLoading(true);
       await updateTask(id, { title });
@@ -90,21 +96,21 @@ export default function TasksPage() {
       );
       toast.success("✏️ Task updated!");
     } catch (err) {
-      console.error("Edit task error:", err);
+      console.error("❌ Edit task error:", err);
       toast.error("❌ Failed to edit task");
     } finally {
       setLoading(false);
     }
   };
 
-  const removeTask = async (id) => {
+  const removeTask = async (id: string) => {
     try {
       setLoading(true);
       await deleteTask(id);
       setTasks((prev) => prev.filter((t) => t.id !== id));
       toast.success("🗑️ Task deleted");
     } catch (err) {
-      console.error("Delete task error:", err);
+      console.error("❌ Delete task error:", err);
       toast.error("❌ Failed to delete task");
     } finally {
       setLoading(false);
