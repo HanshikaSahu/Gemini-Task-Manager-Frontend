@@ -18,7 +18,7 @@ export default function GenerateTasksPage() {
     setTasks([]);
 
     try {
-      const res = await fetch('http://localhost:3001/generateTasks', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/generateTasks`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

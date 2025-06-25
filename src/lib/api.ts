@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:3001/tasks";
+const BASE_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/tasks`;
 
 // ✅ Fetch all tasks for a given user
 export async function fetchTasks(userId: string) {
